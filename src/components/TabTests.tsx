@@ -1,5 +1,5 @@
 import Icon from "@/components/ui/icon";
-import { SUBJECTS, MATH_QUESTIONS, COLOR_MAP, COLOR_TEXT, COLOR_BG } from "@/components/ogeData";
+import { SUBJECTS, ALL_QUESTIONS, COLOR_MAP, COLOR_TEXT, COLOR_BG } from "@/components/ogeData";
 
 interface TabTestsProps {
   selectedSubject: string | null;
@@ -28,6 +28,8 @@ export default function TabTests({
   onRestart,
   onBack,
 }: TabTestsProps) {
+  const questions = selectedSubject ? (ALL_QUESTIONS[selectedSubject] ?? []) : [];
+
   if (!selectedSubject) {
     return (
       <div className="space-y-4 animate-fade-in">
@@ -62,10 +64,10 @@ export default function TabTests({
         <p className="text-muted-foreground mb-6">Правильных ответов</p>
         <div className="glass-card neon-border-purple rounded-2xl px-12 py-6 mb-8">
           <p className="text-6xl font-display font-bold text-white">
-            {score}<span className="text-muted-foreground text-3xl">/{MATH_QUESTIONS.length}</span>
+            {score}<span className="text-muted-foreground text-3xl">/{questions.length}</span>
           </p>
-          <p className={`text-lg font-semibold mt-2 ${score === MATH_QUESTIONS.length ? "text-emerald-400" : score > 0 ? "text-orange-400" : "text-red-400"}`}>
-            {score === MATH_QUESTIONS.length ? "Отлично! 🎉" : score > 1 ? "Хорошо! Продолжай" : "Нужно повторить"}
+          <p className={`text-lg font-semibold mt-2 ${score === questions.length ? "text-emerald-400" : score > 0 ? "text-orange-400" : "text-red-400"}`}>
+            {score === questions.length ? "Отлично! 🎉" : score > 1 ? "Хорошо! Продолжай" : "Нужно повторить"}
           </p>
         </div>
         <button
@@ -87,29 +89,29 @@ export default function TabTests({
         </button>
         <div className="glass-card rounded-xl px-3 py-1.5 flex items-center gap-2">
           <Icon name="HelpCircle" size={14} className="text-purple-400" />
-          <span className="text-sm text-white font-medium">{currentQ + 1} / {MATH_QUESTIONS.length}</span>
+          <span className="text-sm text-white font-medium">{currentQ + 1} / {questions.length}</span>
         </div>
       </div>
 
       <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full progress-bar-fill"
-          style={{ width: `${((currentQ + 1) / MATH_QUESTIONS.length) * 100}%` }}
+          style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}
         />
       </div>
 
       <div className="glass-card neon-border-purple rounded-2xl p-5">
         <span className="text-xs font-semibold text-purple-400 bg-purple-500/10 px-2 py-1 rounded-lg">
-          {MATH_QUESTIONS[currentQ].theme}
+          {questions[currentQ].theme}
         </span>
         <p className="text-white font-semibold text-lg mt-3 leading-relaxed">
-          {MATH_QUESTIONS[currentQ].question}
+          {questions[currentQ].question}
         </p>
       </div>
 
       <div className="space-y-3">
-        {MATH_QUESTIONS[currentQ].options.map((opt, idx) => {
-          const isCorrect = idx === MATH_QUESTIONS[currentQ].correct;
+        {questions[currentQ].options.map((opt, idx) => {
+          const isCorrect = idx === questions[currentQ].correct;
           const isSelected = idx === selected;
           let cls = "w-full glass-card rounded-2xl p-4 text-left flex items-center gap-4 transition-all duration-300 ";
           if (!answered) {
@@ -141,7 +143,7 @@ export default function TabTests({
             <Icon name="Lightbulb" size={16} className="text-emerald-400" />
             <span className="text-emerald-400 font-semibold text-sm">Объяснение</span>
           </div>
-          <p className="text-muted-foreground text-sm leading-relaxed">{MATH_QUESTIONS[currentQ].explanation}</p>
+          <p className="text-muted-foreground text-sm leading-relaxed">{questions[currentQ].explanation}</p>
         </div>
       )}
 
@@ -150,7 +152,7 @@ export default function TabTests({
           onClick={onNext}
           className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-4 rounded-2xl hover:opacity-90 transition-opacity animate-fade-in"
         >
-          {currentQ < MATH_QUESTIONS.length - 1 ? "Следующий вопрос →" : "Завершить тест"}
+          {currentQ < questions.length - 1 ? "Следующий вопрос →" : "Завершить тест"}
         </button>
       )}
     </div>

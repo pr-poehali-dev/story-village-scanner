@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
-import { SUBJECTS, MATH_QUESTIONS, type Tab, type IconName } from "@/components/ogeData";
+import { SUBJECTS, ALL_QUESTIONS, type Tab, type IconName } from "@/components/ogeData";
 import TabSubjects from "@/components/TabSubjects";
 import TabTests from "@/components/TabTests";
 import { TabCheck, TabReference } from "@/components/TabCheckReference";
@@ -18,15 +18,17 @@ export default function Index() {
   const totalDone = SUBJECTS.reduce((s, x) => s + x.done, 0);
   const overallPercent = Math.round((totalDone / totalTests) * 100);
 
+  const currentQuestions = selectedSubject ? (ALL_QUESTIONS[selectedSubject] ?? []) : [];
+
   const handleAnswer = (idx: number) => {
     if (answered) return;
     setSelected(idx);
     setAnswered(true);
-    if (idx === MATH_QUESTIONS[currentQ].correct) setScore((s) => s + 1);
+    if (idx === currentQuestions[currentQ].correct) setScore((s) => s + 1);
   };
 
   const handleNext = () => {
-    if (currentQ < MATH_QUESTIONS.length - 1) {
+    if (currentQ < currentQuestions.length - 1) {
       setCurrentQ((q) => q + 1);
       setSelected(null);
       setAnswered(false);

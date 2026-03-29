@@ -4,9 +4,12 @@ import { SUBJECTS, ALL_QUESTIONS, type Tab, type IconName } from "@/components/o
 import TabSubjects from "@/components/TabSubjects";
 import TabTests from "@/components/TabTests";
 import { TabCheck, TabReference } from "@/components/TabCheckReference";
+import TabTrainer from "@/components/TabTrainer";
+
+type ExtendedTab = Tab | "trainer";
 
 export default function Index() {
-  const [activeTab, setActiveTab] = useState<Tab>("subjects");
+  const [activeTab, setActiveTab] = useState<ExtendedTab>("subjects");
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -57,21 +60,19 @@ export default function Index() {
     setActiveTab("tests");
   };
 
-  const tabs: { id: Tab; label: string; icon: IconName }[] = [
+  const tabs: { id: ExtendedTab; label: string; icon: IconName }[] = [
     { id: "subjects", label: "Предметы", icon: "BookMarked" },
     { id: "tests", label: "Тесты", icon: "ClipboardList" },
-    { id: "check", label: "Проверка", icon: "CheckCircle" },
+    { id: "trainer", label: "Тренажёр", icon: "PenLine" },
     { id: "reference", label: "Справочник", icon: "Library" },
   ];
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden">
-      {/* Background glow blobs */}
       <div className="fixed top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="fixed bottom-1/4 right-1/4 w-80 h-80 bg-cyan-500/8 rounded-full blur-3xl pointer-events-none" />
       <div className="fixed top-1/2 left-0 w-64 h-64 bg-pink-500/6 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header */}
       <header className="sticky top-0 z-50 glass-card border-b border-white/5 px-4 py-3">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -93,7 +94,6 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Main content */}
       <main className="max-w-2xl mx-auto px-4 pb-28 pt-6">
         {activeTab === "subjects" && (
           <TabSubjects
@@ -120,12 +120,13 @@ export default function Index() {
           />
         )}
 
+        {activeTab === "trainer" && <TabTrainer />}
+
         {activeTab === "check" && <TabCheck />}
 
         {activeTab === "reference" && <TabReference />}
       </main>
 
-      {/* Bottom navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 glass-card border-t border-white/5">
         <div className="max-w-2xl mx-auto flex">
           {tabs.map((tab) => (
